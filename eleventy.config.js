@@ -1,3 +1,5 @@
+const { DateTime } = require('luxon');
+
 module.exports = (config) => {
   config.addPassthroughCopy('src/assets/img/**/*');
   config.addPassthroughCopy({ 'src/posts/img/**/*': 'assets/img/' });
@@ -16,6 +18,16 @@ module.exports = (config) => {
   config.addCollection('tagList', require('./lib/collections/tagList'));
   config.addCollection('pagedPosts', require('./lib/collections/pagedPosts'));
   config.addCollection('pagedPostsByTag', require('./lib/collections/pagedPostsByTag'));
+
+  // Add a Nunjucks date filter
+  config.addNunjucksFilter("date", function(date, format) {
+      return DateTime.fromJSDate(date).toFormat(format);
+  });
+
+  // Add a Nunjucks dynamic date filter
+  config.addNunjucksFilter("now", function(format) {
+      return DateTime.now().toFormat(format);
+  });
 
   return {
     dir: {
